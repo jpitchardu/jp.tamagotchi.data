@@ -1,8 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
-
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Bson" Version="2.5.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.5.0" />
+    <PackageReference Include="MongoDB.Driver.Core" Version="2.5.0" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.0.1" />
+    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0"/>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Program.cs" />
+    <Content Include="DataAccess\*.cs" />
+    <Content Include="Entities\*.cs" />
+  </ItemGroup>
 </Project>
