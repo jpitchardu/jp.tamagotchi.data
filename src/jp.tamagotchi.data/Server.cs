@@ -1,36 +1,42 @@
 using Microsoft.Extensions.Configuration;
+
 using System.Threading.Tasks;
 
-namespace jp.tamagotchi.data {
-    public class Server {
+namespace jp.tamagotchi.data
+{
+    public class Server
+    {
 
         private IConfiguration _configuration;
         private IConfigurationSection _serverConfiguration;
         private Grpc.Core.Server _server;
 
-        public Server (IConfiguration configuration) {
+        public Server(IConfiguration configuration)
+        {
             _configuration = configuration;
-            _serverConfiguration = _configuration.GetSection ("server");
+            _serverConfiguration = _configuration.GetSection("server");
 
-            BuildServer ();
+            BuildServer();
 
         }
 
-        private void BuildServer () {
+        private void BuildServer()
+        {
 
             var host = _serverConfiguration["host"];
-            var port = int.Parse (_serverConfiguration["port"]);
+            var port = int.Parse(_serverConfiguration["port"]);
             var credentials = Grpc.Core.ServerCredentials.Insecure;
 
-            _server = new Grpc.Core.Server {
-                Ports = { new Grpc.Core.ServerPort (host, port, credentials) }
+            _server = new Grpc.Core.Server
+            {
+                Ports = { new Grpc.Core.ServerPort(host, port, credentials) }
             };
 
         }
 
-        public void Start () => _server.Start ();
+        public void Start() => _server.Start();
 
-        public Task Stop () => _server.ShutdownAsync ();
+        public Task Stop() => _server.ShutdownAsync();
 
     }
 }

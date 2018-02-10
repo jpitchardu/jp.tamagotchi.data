@@ -1,9 +1,13 @@
-﻿using System;
+using System;
+
 using Microsoft.Extensions.Configuration;
 
-namespace jp.tamagotchi.data {
-    class Program {
-        static void Main(string[] args) {
+namespace jp.tamagotchi.data
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
 
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appSettings.json", true, true)

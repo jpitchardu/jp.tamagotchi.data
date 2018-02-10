@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace jp.tamagotchi.data.Entities {
-    public class User {
+namespace jp.tamagotchi.data.Entities
+{
+    public class User
+    {
 
         [Key]
         public int Id { get; set; }

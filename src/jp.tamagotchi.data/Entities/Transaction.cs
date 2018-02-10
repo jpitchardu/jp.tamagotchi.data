@@ -1,11 +1,15 @@
 using System;
+
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
+
 using System.Collections.Generic;
 
-namespace jp.tamagotchi.data.Entities {
-    public class Transaction {
+namespace jp.tamagotchi.data.Entities
+{
+    public class Transaction
+    {
 
         [BsonId(IdGenerator = typeof(ObjectIdGenerator))]
         public ObjectId Id { get; set; }
