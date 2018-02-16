@@ -12,7 +12,7 @@ namespace jp.tamagotchi.data.DataAccess
         private readonly MongoClient _client;
         private readonly IMongoDatabase _database;
 
-        public MongoDBContext(MongoDBDataConnectionOpts opts)
+        public MongoDBContext(IMongoDBDataConnectionOpts opts)
         {
 
             _client = new MongoClient(opts.ConnectionString);
@@ -22,7 +22,7 @@ namespace jp.tamagotchi.data.DataAccess
 
     }
 
-    public interface MongoDBDataConnectionOpts
+    public interface IMongoDBDataConnectionOpts
     {
         string ConnectionString { get; set; }
         string Database { get; set; }

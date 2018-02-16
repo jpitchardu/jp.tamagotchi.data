@@ -1,6 +1,12 @@
 using System;
 
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using jp.tamagotchi.data.Entities;
+using jp.tamagotchi.data.Registry;
+
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace jp.tamagotchi.data
 {
@@ -13,11 +19,25 @@ namespace jp.tamagotchi.data
                 .AddJsonFile("appSettings.json", true, true)
                 .Build();
 
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging();
+
+            var containerBuilder = new ContainerBuilder();
+
+            containerBuilder.RegisterDataAccess();
+
+            var container = containerBuilder.Build();
+
+            var serviceProvider = new AutofacServiceProvider(container);
+
+            var x = container.Resolve<DataAccess.IDataCollectionAdapter<User>>();
+
             var server = new Server(configuration);
 
             server.Start();
 
             server.Stop().Wait();
+            Console.ReadLine();
 
         }
     }
