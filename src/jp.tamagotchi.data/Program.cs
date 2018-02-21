@@ -17,20 +17,18 @@ namespace jp.tamagotchi.data
         static void Main(string[] args)
         {
 
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appSettings.json", true, true)
-                .Build();
-
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddLogging();
 
             var container = new ContainerBuilder()
-                .RegisterDataAccess(configuration)
+                .RegisterConfiguration()
+                .RegisterDataAccess()
+                .RegisterServer()
                 .Build();
 
             var serviceProvider = new AutofacServiceProvider(container);
 
-            var server = new Server(configuration);
+            var server = container.Resolve<Server>();
 
             server.Start();
 

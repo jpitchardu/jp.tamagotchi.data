@@ -8,28 +8,61 @@ using Microsoft.Extensions.Configuration;
 
 namespace jp.tamagotchi.data.Registry
 {
-    public static class DataAccessRegistry
+    public static class RegistryExtensions
     {
 
-        public static ContainerBuilder RegisterDataAccess(this ContainerBuilder builder, IConfiguration configuration)
+        public static ContainerBuilder RegisterConfiguration(this ContainerBuilder builder)
         {
 
-            builder.Register(c => new MySQLContext(
-                    new DbContextOptionsBuilder<MySQLContext>()
-                    .UseMySql(configuration.GetConnectionString("mysql"))
-                    .Options
-                ))
+            builder.Register(c => new ConfigurationBuilder()
+                    .AddJsonFile("appSettings.json", true, true)
+                    .Build()
+                )
+                .As<IConfiguration>();
+
+            return builder;
+
+        }
+
+        public static ContainerBuilder RegisterDataAccess(this ContainerBuilder builder)
+        {
+
+            builder.Register(c =>
+                {
+                    var configuration = c.Resolve<IConfiguration>();
+
+                    var connectionString = configuration.GetConnectionString("mysql");
+
+                    var options = new DbContextOptionsBuilder<MySQLContext>().UseMySql(connectionString).Options;
+
+                    return new MySQLContext(options);
+                })
                 .As<MySQLContext>();
 
-            builder.Register(c => new MongoDBContext(new MongoDBDataConnectionOpts
+            builder.Register(c =>
                 {
-                    ConnectionString = configuration.GetConnectionString("mysql"),
-                        Database = "jp-tamagotchi"
-                }))
+                    var configuration = c.Resolve<IConfiguration>();
+
+                    var connectionString = configuration.GetConnectionString("mongodb");
+
+                    var options = new MongoDBDataConnectionOpts { ConnectionString = connectionString, Database = "jp-tamagotchi" };
+
+                    return new MongoDBContext(options);
+                })
                 .As<MongoDBContext>();
 
             return builder;
 
         }
+
+        public static ContainerBuilder RegisterServer(this ContainerBuilder builder)
+        {
+
+            builder.RegisterType<Server>().AsSelf();
+
+            return builder;
+
+        }
+
     }
 }
