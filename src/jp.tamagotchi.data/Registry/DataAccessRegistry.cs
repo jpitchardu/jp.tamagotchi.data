@@ -11,7 +11,7 @@ namespace jp.tamagotchi.data.Registry
     public static class DataAccessRegistry
     {
 
-        public static void RegisterDataAccess(this ContainerBuilder builder, IConfiguration configuration)
+        public static ContainerBuilder RegisterDataAccess(this ContainerBuilder builder, IConfiguration configuration)
         {
 
             builder.Register(c => new MySQLContext(
@@ -21,13 +21,14 @@ namespace jp.tamagotchi.data.Registry
                 ))
                 .As<MySQLContext>();
 
-            builder.Register(c => new MongoDBContext( new MongoDBDataConnectionOpts
-                    {
-                        ConnectionString = configuration.GetConnectionString("mysql"),
+            builder.Register(c => new MongoDBContext(new MongoDBDataConnectionOpts
+                {
+                    ConnectionString = configuration.GetConnectionString("mysql"),
                         Database = "jp-tamagotchi"
-                    }
-                ))
+                }))
                 .As<MongoDBContext>();
+
+            return builder;
 
         }
     }
