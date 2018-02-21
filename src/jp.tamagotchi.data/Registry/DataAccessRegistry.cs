@@ -3,23 +3,31 @@ using Autofac;
 using jp.tamagotchi.data.DataAccess;
 using jp.tamagotchi.data.Entities;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
 namespace jp.tamagotchi.data.Registry
 {
     public static class DataAccessRegistry
     {
 
-        public static void RegisterDataAccess(this ContainerBuilder builder)
+        public static void RegisterDataAccess(this ContainerBuilder builder, IConfiguration configuration)
         {
 
-            builder.RegisterType<MySQLContext>().AsSelf();
-            builder.RegisterType<MongoDBContext>().AsSelf();
+            builder.Register(c => new MySQLContext(
+                    new DbContextOptionsBuilder<MySQLContext>()
+                    .UseMySql(configuration.GetConnectionString("mysql"))
+                    .Options
+                ))
+                .As<MySQLContext>();
 
-            builder.Register(c => DataCollectionAdapterFactory.AdapterFromDbSet(c.Resolve<MySQLContext>().Developer))
-                .As<IDataCollectionAdapter<Developer>>();
-            builder.Register(c => DataCollectionAdapterFactory.AdapterFromDbSet(c.Resolve<MySQLContext>().User))
-                .As<IDataCollectionAdapter<User>>();
-            builder.Register(c => DataCollectionAdapterFactory.AdapterFromDbSet(c.Resolve<MySQLContext>().Pet))
-                .As<IDataCollectionAdapter<Pet>>();
+            builder.Register(c => new MongoDBContext( new MongoDBDataConnectionOpts
+                    {
+                        ConnectionString = configuration.GetConnectionString("mysql"),
+                        Database = "jp-tamagotchi"
+                    }
+                ))
+                .As<MongoDBContext>();
 
         }
     }

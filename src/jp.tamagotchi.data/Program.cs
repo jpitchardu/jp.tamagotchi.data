@@ -2,6 +2,7 @@ using System;
 
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using jp.tamagotchi.data.DataAccess;
 using jp.tamagotchi.data.Entities;
 using jp.tamagotchi.data.Registry;
 
@@ -24,13 +25,13 @@ namespace jp.tamagotchi.data
 
             var containerBuilder = new ContainerBuilder();
 
-            containerBuilder.RegisterDataAccess();
+            containerBuilder.RegisterDataAccess(configuration);
 
             var container = containerBuilder.Build();
 
             var serviceProvider = new AutofacServiceProvider(container);
 
-            var x = container.Resolve<DataAccess.IDataCollectionAdapter<User>>();
+            var x = container.Resolve<MySQLContext>();
 
             var server = new Server(configuration);
 

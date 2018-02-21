@@ -20,7 +20,7 @@
     <PackageReference Include="Autofac" Version="4.6.2" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="appSettings.json" CopyToOutputDirectory="Always"  />
+    <Content Include="appSettings.json" CopyToOutputDirectory="Always" />
     <Content Include="Program.cs" />
     <Content Include="Server.cs" />
     <Content Include="DataAccess\*.cs" />
