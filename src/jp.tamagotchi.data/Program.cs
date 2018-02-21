@@ -18,9 +18,13 @@ namespace jp.tamagotchi.data
         {
 
             var serviceCollection = new ServiceCollection();
+
             serviceCollection.AddLogging();
 
             var container = new ContainerBuilder()
+                .PopulateServices(
+                    services => services.AddLogging()
+                )
                 .RegisterConfiguration()
                 .RegisterDataAccess()
                 .RegisterServer()

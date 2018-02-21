@@ -1,15 +1,32 @@
+using System;
+
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
 
 using jp.tamagotchi.data.DataAccess;
 using jp.tamagotchi.data.Entities;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace jp.tamagotchi.data.Registry
 {
     public static class RegistryExtensions
     {
+
+        public static ContainerBuilder PopulateServices(this ContainerBuilder builder, params Action<ServiceCollection>[] operations)
+        {
+
+            var services = new ServiceCollection();
+
+            Array.ForEach(operations, operation => operation.Invoke(services));
+
+            builder.Populate(services);
+
+            return builder;
+
+        }
 
         public static ContainerBuilder RegisterConfiguration(this ContainerBuilder builder)
         {
