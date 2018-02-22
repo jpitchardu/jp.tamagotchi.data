@@ -15,12 +15,12 @@ namespace jp.tamagotchi.data.Registry
     public static class RegistryExtensions
     {
 
-        public static ContainerBuilder PopulateServices(this ContainerBuilder builder, params Action<ServiceCollection>[] operations)
+        public static ContainerBuilder PopulateServices(this ContainerBuilder builder, params Action<ServiceCollection>[] actions)
         {
 
             var services = new ServiceCollection();
 
-            Array.ForEach(operations, operation => operation.Invoke(services));
+            Array.ForEach(actions, action => action.Invoke(services));
 
             builder.Populate(services);
 

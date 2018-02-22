@@ -17,10 +17,6 @@ namespace jp.tamagotchi.data
         static void Main(string[] args)
         {
 
-            var serviceCollection = new ServiceCollection();
-
-            serviceCollection.AddLogging();
-
             var container = new ContainerBuilder()
                 .PopulateServices(
                     services => services.AddLogging()
@@ -30,13 +26,16 @@ namespace jp.tamagotchi.data
                 .RegisterServer()
                 .Build();
 
-            var serviceProvider = new AutofacServiceProvider(container);
+            using(var scope = container.BeginLifetimeScope("root"))
+            {
 
-            var server = container.Resolve<Server>();
+                var server = scope.Resolve<Server>();
 
-            server.Start();
+                server.Start();
 
-            server.Stop().Wait();
+                server.Stop().Wait();
+                
+            }
 
             Console.ReadLine();
 
