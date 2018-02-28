@@ -1,31 +1,32 @@
-using MongoDB.Bson.Serialization;
-using MongoDB.Driver;
+ using System.Collections.Generic;
 
-using System.Collections.Generic;
+ using MongoDB.Driver;
 
-namespace jp.tamagotchi.data.DataAccess
-{
+ namespace jp.tamagotchi.data.DataAccess
+ {
 
-    public class MongoDBContext
-    {
+     public class MongoDBContext
+     {
 
-        private readonly MongoClient _client;
-        private readonly IMongoDatabase _database;
+         private readonly MongoClient _client;
+         private readonly IMongoDatabase _database;
 
-        public MongoDBContext(MongoDBDataConnectionOpts opts)
-        {
+         public MongoDBContext(MongoDBDataConnectionOpts opts)
+         {
 
-            _client = new MongoClient(opts.ConnectionString);
-            _database = _client.GetDatabase(opts.Database);
+             _client = new MongoClient(opts.ConnectionString);
+             _database = _client.GetDatabase(opts.Database);
 
-        }
+         }
 
-    }
+         public IMongoCollection<TDocument> GetCollection<TDocument>(string collectionName) => _database.GetCollection<TDocument>(collectionName);
 
-    public class MongoDBDataConnectionOpts
-    {
-        public string ConnectionString { get; set; }
-        public string Database { get; set; }
-    }
+     }
 
-}
+     public class MongoDBDataConnectionOpts
+     {
+         public string ConnectionString { get; set; }
+         public string Database { get; set; }
+     }
+
+ }
