@@ -41,7 +41,8 @@ namespace jp.tamagotchi.data.Queries
             {
                 result.Data = _mySqlContext.User.Where(predicate)
                     .Select(user => new GetUserByExampleQueryResultData() { User = user, Pets = getPets(user) })
-                    .FirstOrDefault();
+                    .Take(payload.Size)
+                    .ToList();
             }
             catch (System.Exception ex)
             {
@@ -55,10 +56,11 @@ namespace jp.tamagotchi.data.Queries
 
     public class GetUserByExampleQueryPayload
     {
+        public int Size { get; set; }
         public User Example { get; set; }
     }
 
-    public class GetUserByExampleQueryResult : DataQueryResult<GetUserByExampleQueryResultData> { }
+    public class GetUserByExampleQueryResult : DataQueryResult<List<GetUserByExampleQueryResultData>> { }
 
     public class GetUserByExampleQueryResultData
     {

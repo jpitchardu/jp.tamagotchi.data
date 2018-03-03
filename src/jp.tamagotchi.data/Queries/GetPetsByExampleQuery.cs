@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using jp.tamagotchi.data.DataAccess;
@@ -29,7 +30,9 @@ namespace jp.tamagotchi.data.Queries
 
             try
             {
-                result.Data = _mySqlContext.Pet.Where(predicate).FirstOrDefault();
+                result.Data = _mySqlContext.Pet.Where(predicate)
+                    .Take(payload.Size)
+                    .ToList();
             }
             catch (System.Exception ex)
             {
@@ -43,9 +46,10 @@ namespace jp.tamagotchi.data.Queries
 
     public class GetPetByExampleQueryPayload
     {
+        public int Size { get; set; }
         public Pet Example { get; set; }
     }
 
-    public class GetPetByExampleQueryResult : DataQueryResult<Pet> { }
+    public class GetPetByExampleQueryResult : DataQueryResult<List<Pet>> { }
 
 }
