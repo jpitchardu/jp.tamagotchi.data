@@ -21,11 +21,22 @@ namespace jp.tamagotchi.data.Queries
         public GetPetByExampleQueryResult Query(GetPetByExampleQueryPayload payload)
         {
 
+            var result = new GetPetByExampleQueryResult();
+
             Func<Pet, bool> predicate = entity =>
                 (payload.Example?.Id ?? 0) == entity.Id &&
                 (payload.Example?.Name ?? "") == entity.Name;
 
-            return new GetPetByExampleQueryResult() { Data = _mySqlContext.Pet.Where(predicate).FirstOrDefault() };
+            try
+            {
+                result.Data = _mySqlContext.Pet.Where(predicate).FirstOrDefault();
+            }
+            catch (System.Exception ex)
+            {
+                result.AddError(ex);
+            }
+
+            return result;
 
         }
     }
@@ -35,9 +46,6 @@ namespace jp.tamagotchi.data.Queries
         public Pet Example { get; set; }
     }
 
-    public class GetPetByExampleQueryResult : DataQueryResult<Pet>
-    {
-
-    }
+    public class GetPetByExampleQueryResult : DataQueryResult<Pet> { }
 
 }

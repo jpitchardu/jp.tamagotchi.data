@@ -24,6 +24,8 @@ namespace jp.tamagotchi.data.Queries
         GetUserByExampleQueryResult IQuery<GetUserByExampleQueryPayload, GetUserByExampleQueryResult>.Query(GetUserByExampleQueryPayload payload)
         {
 
+            var result = new GetUserByExampleQueryResult();
+
             Func<User, bool> predicate = entity =>
                 (payload.Example?.Id ?? 0) == entity.Id &&
                 (payload.Example?.UserName ?? "") == entity.UserName &&
@@ -35,12 +37,18 @@ namespace jp.tamagotchi.data.Queries
                 .Where(document => document.UserId == user.Id)
                 .ToList();
 
-            return new GetUserByExampleQueryResult()
+            try
             {
-                Data = _mySqlContext.User.Where(predicate)
+                result.Data = _mySqlContext.User.Where(predicate)
                     .Select(user => new GetUserByExampleQueryResultData() { User = user, Pets = getPets(user) })
-                    .FirstOrDefault()
-            };
+                    .FirstOrDefault();
+            }
+            catch (System.Exception ex)
+            {
+                result.AddError(ex);
+            }
+
+            return result;
 
         }
     }
@@ -50,8 +58,7 @@ namespace jp.tamagotchi.data.Queries
         public User Example { get; set; }
     }
 
-    public class GetUserByExampleQueryResult : DataQueryResult<GetUserByExampleQueryResultData>
-    { }
+    public class GetUserByExampleQueryResult : DataQueryResult<GetUserByExampleQueryResultData> { }
 
     public class GetUserByExampleQueryResultData
     {

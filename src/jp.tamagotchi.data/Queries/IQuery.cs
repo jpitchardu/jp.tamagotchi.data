@@ -10,7 +10,7 @@ namespace jp.tamagotchi.data.Queries
 
     public class QueryResult
     {
-        public bool Sucessful => Errors.Count == 0;
+        public virtual bool Sucessful =>(Errors?.Count ?? 0) != 0;
         public List<Exception> Errors { get; set; }
 
         public QueryResult AddError(Exception ex)
@@ -24,6 +24,7 @@ namespace jp.tamagotchi.data.Queries
 
     public class DataQueryResult<TData> : QueryResult
     {
+        public override bool Sucessful =>(Errors?.Count ?? 0) != 0 && Data != null;
         public TData Data { get; set; }
     }
 }
