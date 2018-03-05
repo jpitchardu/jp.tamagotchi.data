@@ -21,7 +21,7 @@ namespace jp.tamagotchi.data.Queries
             _mongoDBContext = mongoDBContext;
         }
 
-        GetUserByExampleQueryResult IQuery<GetUserByExampleQueryPayload, GetUserByExampleQueryResult>.Query(GetUserByExampleQueryPayload payload)
+        public GetUserByExampleQueryResult Query(GetUserByExampleQueryPayload payload)
         {
 
             var result = new GetUserByExampleQueryResult();
@@ -39,10 +39,10 @@ namespace jp.tamagotchi.data.Queries
 
             try
             {
-                result.Data = _mySqlContext.User.Where(predicate)
-                    .Select(user => new GetUserByExampleQueryResultData() { User = user, Pets = getPets(user) })
-                    .Take(payload.Size)
-                    .ToList();
+                var data = _mySqlContext.User.Where(predicate)
+                    .Select(user => new GetUserByExampleQueryResultData() { User = user, Pets = getPets(user) });
+
+                result.Data = (payload.Size != 0 ? data.Take(payload.Size) : data).ToList();
             }
             catch (System.Exception ex)
             {

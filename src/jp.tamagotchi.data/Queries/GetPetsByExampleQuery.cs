@@ -30,9 +30,9 @@ namespace jp.tamagotchi.data.Queries
 
             try
             {
-                result.Data = _mySqlContext.Pet.Where(predicate)
-                    .Take(payload.Size)
-                    .ToList();
+                var data = _mySqlContext.Pet.Where(predicate);
+
+                result.Data = (payload.Size != 0 ? data.Take(payload.Size) : data).ToList();
             }
             catch (System.Exception ex)
             {
