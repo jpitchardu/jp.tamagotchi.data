@@ -1,78 +1,88 @@
 using System;
-
+using System.Linq;
 using jp.tamagotchi.data.DataAccess;
 using jp.tamagotchi.data.Queries;
-
 using Microsoft.EntityFrameworkCore;
-
 using Xunit;
 
-namespace jp.tamagotchi.data.test.Queries.Test
-{
-    public class SaveUserQueryTests : IDisposable
-    {
+namespace jp.tamagotchi.data.test.Queries.Test {
+    public class SaveUserQueryTests : IDisposable {
         private MySQLContext _context;
 
-        public SaveUserQueryTests()
-        {
-            var options = new DbContextOptionsBuilder<MySQLContext>()
-                .UseInMemoryDatabase(databaseName: "Save_User_Query_Tests")
+        public SaveUserQueryTests () {
+            var options = new DbContextOptionsBuilder<MySQLContext> ()
+                .UseInMemoryDatabase (databaseName: "Save_User_Query_Tests")
                 .Options;
 
-            _context = new MySQLContext(options);
+            _context = new MySQLContext (options);
         }
 
-        public void Dispose()
-        {
-            _context.Dispose();
+        public void Dispose () {
+            _context.Dispose ();
         }
 
         [Fact]
-        public void When_User_Valid_And_No_Id_Should_Create_User()
-        {
-            var query = new SaveUserQuery(_context);
+        public void When_User_Valid_And_No_Id_Should_Create_User () {
+            var query = new SaveUserQuery (_context);
 
-            var payload = new SaveUserQueryPayload()
-            {
-                User = new Entities.User()
-                {
+            var payload = new SaveUserQueryPayload () {
+                User = new Entities.User () {
                 UserName = "foo",
                 Password = "bar",
                 Email = "foo.bar@mail.com"
                 }
             };
 
-            var result = query.Query(payload);
+            var result = query.Query (payload);
 
-            Assert.True(result.Sucessful);
-            Assert.NotEqual(0, result.Data.Id);
+            Assert.True (result.Sucessful);
+            Assert.NotEqual (0, result.Data.Id);
+            Assert.NotEmpty (_context.User);
 
         }
 
         [Fact]
-        public void When_User_Valid_And_Id_Should_Update_User()
-        {
-            var query = new SaveUserQuery(_context);
+        public void When_User_Valid_And_Id_Should_Update_User () {
+            var query = new SaveUserQuery (_context);
 
-            var payload = new SaveUserQueryPayload()
-            {
-                User = new Entities.User()
-                {
+            var payload = new SaveUserQueryPayload () {
+                User = new Entities.User () {
                 UserName = "foo",
                 Password = "bar",
                 Email = "foo.bar@mail.com"
                 }
             };
 
-            var result = query.Query(payload);
+            var result = query.Query (payload);
 
             payload.User = result.Data;
             payload.User.Email = "foo.bar@mail2.com";
 
-            result = query.Query(payload);
+            result = query.Query (payload);
 
-            Assert.True(result.Sucessful);
-            Assert.Equal("foo.bar@mail2.com", result.Data.Email);
+            Assert.True (result.Sucessful);
+            Assert.Equal ("foo.bar@mail2.com", result.Data.Email);
+            Assert.NotEmpty (_context.User);
+
+        }
+
+        [Fact]
+        public void When_User_With_Invalid_Id_Should_Fail () {
+            var query = new SaveUserQuery (_context);
+
+            var payload = new SaveUserQueryPayload () {
+                User = new Entities.User () {
+                Id = 1,
+                UserName = "foo",
+                Password = "bar",
+                Email = "foo.bar@mail.com"
+                }
+            };
+
+            var result = query.Query (payload);
+
+            Assert.False (result.Sucessful);
+            Assert.Empty (_context.User);
 
         }
 

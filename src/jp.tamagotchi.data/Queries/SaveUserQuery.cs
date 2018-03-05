@@ -20,6 +20,7 @@ namespace jp.tamagotchi.data.Queries
             try
             {
                 result.Data = payload.User.Id == 0 ? _context.User.Add(payload.User).Entity : _context.User.Update(payload.User).Entity;
+                _context.SaveChanges();
             }
             catch (System.Exception ex)
             {

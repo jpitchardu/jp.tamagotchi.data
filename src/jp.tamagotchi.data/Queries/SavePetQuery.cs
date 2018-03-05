@@ -20,7 +20,8 @@ namespace jp.tamagotchi.data.Queries
 
             try
             {
-                result.Data = payload.Pet.Id != 0 ? _context.Pet.Add(payload.Pet).Entity : _context.Pet.Update(payload.Pet).Entity;
+                result.Data = payload.Pet.Id == 0 ? _context.Pet.Add(payload.Pet).Entity : _context.Pet.Update(payload.Pet).Entity;
+                _context.SaveChanges();
             }
             catch (System.Exception ex)
             {
