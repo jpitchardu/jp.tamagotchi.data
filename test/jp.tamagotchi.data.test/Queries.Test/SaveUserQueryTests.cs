@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 using jp.tamagotchi.data.DataAccess;
 using jp.tamagotchi.data.Queries;
@@ -46,6 +47,7 @@ namespace jp.tamagotchi.data.test.Queries.Test
 
             Assert.True(result.Sucessful);
             Assert.NotEqual(0, result.Data.Id);
+            Assert.NotEmpty(_context.User);
 
         }
 
@@ -73,6 +75,30 @@ namespace jp.tamagotchi.data.test.Queries.Test
 
             Assert.True(result.Sucessful);
             Assert.Equal("foo.bar@mail2.com", result.Data.Email);
+            Assert.NotEmpty(_context.User);
+
+        }
+
+        [Fact]
+        public void When_User_With_Invalid_Id_Should_Fail()
+        {
+            var query = new SaveUserQuery(_context);
+
+            var payload = new SaveUserQueryPayload()
+            {
+                User = new Entities.User()
+                {
+                Id = 1,
+                UserName = "foo",
+                Password = "bar",
+                Email = "foo.bar@mail.com"
+                }
+            };
+
+            var result = query.Query(payload);
+
+            Assert.False(result.Sucessful);
+            Assert.Empty(_context.User);
 
         }
 

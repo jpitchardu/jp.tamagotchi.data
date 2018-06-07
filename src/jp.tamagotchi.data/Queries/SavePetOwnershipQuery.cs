@@ -5,19 +5,19 @@ using MongoDB.Driver;
 
 namespace jp.tamagotchi.data.Queries
 {
-    public class RegisterPetOwnershipQuery : IQuery<RegisterPetOwnershipQueryPayload, RegisterPetOwnershipQueryResult>
+    public class SavePetOwnershipQuery : IQuery<SavePetOwnershipQueryPayload, SavePetOwnershipQueryResult>
     {
 
         private MongoDBContext _context;
 
-        public RegisterPetOwnershipQuery(MongoDBContext context)
+        public SavePetOwnershipQuery(MongoDBContext context)
         {
             _context = context;
         }
 
-        public RegisterPetOwnershipQueryResult Query(RegisterPetOwnershipQueryPayload payload)
+        public SavePetOwnershipQueryResult Query(SavePetOwnershipQueryPayload payload)
         {
-            var result = new RegisterPetOwnershipQueryResult();
+            var result = new SavePetOwnershipQueryResult();
             var filterBuilder = Builders<PetOwnership>.Filter;
             try
             {
@@ -40,7 +40,7 @@ namespace jp.tamagotchi.data.Queries
 
     }
 
-    public class RegisterPetOwnershipQueryPayload
+    public class SavePetOwnershipQueryPayload
     {
         public PetOwnership PetOwnership
         {
@@ -49,6 +49,5 @@ namespace jp.tamagotchi.data.Queries
         }
     }
 
-    public class RegisterPetOwnershipQueryResult : DataQueryResult<PetOwnership>
-    { }
+    public class SavePetOwnershipQueryResult : DataQueryResult<PetOwnership> { }
 }
