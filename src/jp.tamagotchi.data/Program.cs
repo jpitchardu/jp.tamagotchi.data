@@ -34,7 +34,7 @@ namespace jp.tamagotchi.data
                 server.Start();
 
                 server.Stop().Wait();
-                
+
             }
 
             Console.ReadLine();

@@ -1,5 +1,6 @@
 using jp.tamagotchi.data.DataAccess;
 using jp.tamagotchi.data.Entities;
+
 using MongoDB.Driver;
 
 namespace jp.tamagotchi.data.Queries
@@ -26,7 +27,7 @@ namespace jp.tamagotchi.data.Queries
                     collection.InsertOne(payload.PetOwnership);
                 else
                     collection.ReplaceOne(filterBuilder.Where(x => x.Id == payload.PetOwnership.Id), payload.PetOwnership);
-                
+
                 result.Data = payload.PetOwnership;
             }
             catch (System.Exception ex)
@@ -41,8 +42,13 @@ namespace jp.tamagotchi.data.Queries
 
     public class RegisterPetOwnershipQueryPayload
     {
-        public PetOwnership PetOwnership { get; set; }
+        public PetOwnership PetOwnership
+        {
+            get;
+            set;
+        }
     }
 
-    public class RegisterPetOwnershipQueryResult : DataQueryResult<PetOwnership> { }
+    public class RegisterPetOwnershipQueryResult : DataQueryResult<PetOwnership>
+    { }
 }
